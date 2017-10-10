@@ -17,11 +17,12 @@ class Source(Base):
         loclist = self.vim.call('ale#engine#GetLoclist', context['__bufnr'])
         return [self._convert(loc) for loc in loclist]
 
-    def _convert(self, locinfo):
+    def _convert(self, info):
+        abbr = '[%d:%d] %s' % (info['lnum'], info['col'], info['text'])
         return {
-                'word' : locinfo['text'],
-                'abbr' : '[%d:%d] %s' % (locinfo['lnum'], locinfo['col'], locinfo['text']),
-                'action__path' : self.vim.call('bufname', locinfo['bufnr']),
-                'action__line' : locinfo['lnum'],
-                'action__col' : locinfo['col']
-        }
+                'word': info['text'],
+                'abbr': abbr,
+                'action__path': self.vim.call('bufname', info['bufnr']),
+                'action__line': info['lnum'],
+                'action__col': info['col']
+                }
